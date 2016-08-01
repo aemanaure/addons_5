@@ -8,11 +8,11 @@
         <width>800</width>
         <height>500</height>
         <control type="image">
-          <texture>ChannelSettings/DialogBack.png</texture>
+          <texture>Windows/DialogBack.png</texture>
         </control>
         <control type="image">
           <height>50</height>
-          <texture>ChannelSettings/dialogheader.png</texture>
+          <texture>Windows/dialogheader.png</texture>
         </control>
         <control type="label" id="10002">
           <top>10</top>
@@ -28,16 +28,16 @@
           <top>15</top>
           <width>70</width>
           <height>40</height>
-          <texturefocus>ChannelSettings/DialogCloseButton-focus.png</texturefocus>
-          <texturenofocus>ChannelSettings/DialogCloseButton.png</texturenofocus>    
+          <texturefocus>Controls/DialogCloseButton-focus.png</texturefocus>
+          <texturenofocus>Controls/DialogCloseButton.png</texturenofocus>    
         </control>
         <control type="button" id="10004">
           <centerleft>230</centerleft>
           <bottom>30</bottom>
           <width>150</width>
           <height>40</height>
-          <texturefocus>ChannelSettings/KeyboardKey.png</texturefocus>
-          <texturenofocus>ChannelSettings/KeyboardKeyNF.png</texturenofocus>  
+          <texturefocus>Controls/KeyboardKey.png</texturefocus>
+          <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>  
           <align>center</align>
           <aligny>center</aligny>  
           <label>OK</label>
@@ -47,8 +47,8 @@
           <bottom>30</bottom>
           <width>150</width>
           <height>40</height>
-          <texturefocus>ChannelSettings/KeyboardKey.png</texturefocus>
-          <texturenofocus>ChannelSettings/KeyboardKeyNF.png</texturenofocus>   
+          <texturefocus>Controls/KeyboardKey.png</texturefocus>
+          <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>   
           <align>center</align>
           <aligny>center</aligny> 
           <label>Cancelar</label>
@@ -58,8 +58,8 @@
           <bottom>30</bottom>
           <width>150</width>
           <height>40</height>
-          <texturefocus>ChannelSettings/KeyboardKey.png</texturefocus>
-          <texturenofocus>ChannelSettings/KeyboardKeyNF.png</texturenofocus>    
+          <texturefocus>Controls/KeyboardKey.png</texturefocus>
+          <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>    
           <align>center</align>
           <aligny>center</aligny>
           <label>Por defecto</label>
@@ -70,23 +70,22 @@
           <right>50</right>
           <bottom>80</bottom>
           <control type="image">
-            <texture>ChannelSettings/BackControls.png</texture>
+            <texture>Windows/BackControls.png</texture>
           </control>
-
         </control>
         <control type="image" id="10008">
           <top>60</top>
           <left>765</left>
-          <right>25</right>
-          <bottom>80</bottom>
-          <texture>ChannelSettings/ScrollBack.png</texture>
+          <width>10</width>
+          <height>360</height>
+          <texture>Controls/ScrollBack.png</texture>
         </control>
         <control type="image" id="10009">
           <top>60</top>
           <left>765</left>
-          <right>25</right>
-          <bottom>80</bottom>
-          <texture>ChannelSettings/ScrollBar.png</texture>
+          <width>10</width>
+          <height>360</height>
+          <texture>Controls/ScrollBar.png</texture>
         </control>
       </control>
     </controls>

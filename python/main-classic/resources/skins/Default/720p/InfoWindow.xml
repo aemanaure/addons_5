@@ -8,15 +8,17 @@
         <width>800</width>
         <height>480</height>
         <control type="image">
-          <texture>InfoWindow/DialogBack.png</texture>
+          <texture>Windows/DialogBack.png</texture>
         </control>
         <control type="image">
           <height>40</height>
-          <texture>InfoWindow/dialogheader.png</texture>
+          <texture>Windows/dialogheader.png</texture>
         </control>
         <control type="label" id="10002">
           <top>10</top>
+          <left>10</left>
           <height>34</height>
+          <width>715</width>
           <font>font12_title</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>center</align>
@@ -28,8 +30,8 @@
           <top>15</top>
           <width>50</width>
           <height>30</height>
-          <texturefocus>InfoWindow/DialogCloseButton-focus.png</texturefocus>
-          <texturenofocus>InfoWindow/DialogCloseButton.png</texturenofocus>
+          <texturefocus>Controls/DialogCloseButton-focus.png</texturefocus>
+          <texturenofocus>Controls/DialogCloseButton.png</texturenofocus>
         </control>
         <control type="image" id="10004">
           <left>11</left>
@@ -50,6 +52,7 @@
           <top>50</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -73,6 +76,7 @@
           <top>70</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -96,6 +100,7 @@
           <top>90</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -119,6 +124,7 @@
           <top>110</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -142,6 +148,7 @@
           <top>130</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -165,6 +172,7 @@
           <top>150</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -188,6 +196,7 @@
           <top>170</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -211,6 +220,7 @@
           <top>190</top>
           <left>20</left>
           <height>40</height>
+          <width>100</width>
           <font>font10</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>left</align>
@@ -256,51 +266,59 @@
         </control>
 
         <control type="group" id="10024">
+          <top>230</top>
           <left>20</left>
           <width>760</width>
           <bottom>20</bottom>
           <height>30</height>
 
           <control type="button" id="10025">
+            <top>200</top>
+            <left>0</left>
             <width>110</width>
             <height>30</height>
-            <texturefocus>ChannelSettings/KeyboardKey.png</texturefocus>
-            <texturenofocus>ChannelSettings/KeyboardKeyNF.png</texturenofocus>
+            <texturefocus>Controls/KeyboardKey.png</texturefocus>
+            <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
             <label>Anterior</label>
           </control>
           <control type="button" id="10026">
+            <top>200</top>
             <left>115</left>
             <width>110</width>
             <height>30</height>
-            <texturefocus>ChannelSettings/KeyboardKey.png</texturefocus>
-            <texturenofocus>ChannelSettings/KeyboardKeyNF.png</texturenofocus>
+            <texturefocus>Controls/KeyboardKey.png</texturefocus>
+            <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
             <label>Siguiente</label>
           </control>
           <control type="button" id="10027">
+            <top>200</top>
             <left>253</left>
             <width>110</width>
             <height>30</height>
-            <texturefocus>ChannelSettings/KeyboardKey.png</texturefocus>
-            <texturenofocus>ChannelSettings/KeyboardKeyNF.png</texturenofocus>
+            <texturefocus>Controls/KeyboardKey.png</texturefocus>
+            <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
             <label>Cancelar</label>
           </control>
           <control type="button" id="10028">
+            <top>200</top>
             <left>390</left>
             <width>120</width>
             <height>30</height>
-            <texturefocus>ChannelSettings/KeyboardKey.png</texturefocus>
-            <texturenofocus>ChannelSettings/KeyboardKeyNF.png</texturenofocus>
+            <texturefocus>Controls/KeyboardKey.png</texturefocus>
+            <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
             <label>Aceptar</label>
           </control>
           <control type="label" id="100029">
+            <top>170</top>
+            <height>100</height>
             <right>0</right>
             <width>110</width>
             <font>font10</font>
