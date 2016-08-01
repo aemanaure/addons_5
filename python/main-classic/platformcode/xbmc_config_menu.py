@@ -459,17 +459,17 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 # Creamos el control
                 control = xbmcgui.ControlRadioButton(self.controls_pos_x - 10, -100, self.controls_width + 10,
                                                      self.height_control, label=label, font=font, textColor=color,
-                                                     focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                                'MenuItemFO.png'),
-                                                     noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                                  'MenuItemNF.png'),
-                                                     focusOnTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     focusOnTexture=os.path.join(self.mediapath, 'Controls',
                                                                                  'radiobutton-focus.png'),
-                                                     noFocusOnTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     noFocusOnTexture=os.path.join(self.mediapath, 'Controls',
                                                                                    'radiobutton-focus.png'),
-                                                     focusOffTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     focusOffTexture=os.path.join(self.mediapath, 'Controls',
                                                                                   'radiobutton-nofocus.png'),
-                                                     noFocusOffTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     noFocusOffTexture=os.path.join(self.mediapath, 'Controls',
                                                                                     'radiobutton-nofocus.png'))
                 # Lo añadimos a la ventana
                 self.addControl(control)
@@ -489,9 +489,9 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 # Creamos el control
                 control = xbmcgui.ControlEdit(self.controls_pos_x, -100, self.controls_width - 5, self.height_control,
                                               label, font=font, isPassword=hidden, textColor=color,
-                                              focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                         'MenuItemFO.png'),
-                                              noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'MenuItemNF.png'))
                 # Lo añadimos a la ventana
                 self.addControl(control)
@@ -514,24 +514,24 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 # Creamos los controles el list se forma de 3 controles
                 control = xbmcgui.ControlButton(self.controls_pos_x, -100, self.controls_width, self.height_control,
                                                 label, font=font, textOffsetX=0, textColor=color,
-                                                focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'MenuItemFO.png'),
-                                                noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                             'MenuItemNF.png'))
 
                 label = xbmcgui.ControlLabel(self.controls_pos_x, -100, self.controls_width - 30, self.height_control,
                                              lvalues[value], font=font, textColor=color, alignment=4 | 1)
 
                 upBtn = xbmcgui.ControlButton(self.controls_pos_x + self.controls_width - 25, -100, 20, 15, '',
-                                              focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                         'spinUp-Focus.png'),
-                                              noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'spinUp-noFocus.png'))
 
                 downBtn = xbmcgui.ControlButton(self.controls_pos_x + self.controls_width - 25, -100 + 15, 20, 15, '',
-                                                focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'spinDown-Focus.png'),
-                                                noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                             'spinDown-noFocus.png'))
 
                 # Los añadimos a la ventana
