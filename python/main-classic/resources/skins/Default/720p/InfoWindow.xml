@@ -3,10 +3,10 @@
     <allowoverlays>false</allowoverlays>
     <controls>
       <control type="group" id="10001">
-        <centerleft>640</centerleft>
-        <centertop>360</centertop>
+        <left>240</left>
+        <top>110</top>
         <width>800</width>
-        <height>480</height>
+        <height>500</height>
         <control type="image">
           <texture>Windows/DialogBack.png</texture>
         </control>
@@ -18,26 +18,26 @@
           <top>10</top>
           <left>10</left>
           <height>34</height>
-          <width>715</width>
+          <width>725</width>
           <font>font12_title</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>center</align>
           <aligny>center</aligny>
-          <label></label>
+          <label>Opciones</label>
         </control>
         <control type="button" id="10003">
-          <right>15</right>
+          <left>735</left>
           <top>15</top>
           <width>50</width>
           <height>30</height>
           <texturefocus>Controls/DialogCloseButton-focus.png</texturefocus>
-          <texturenofocus>Controls/DialogCloseButton.png</texturenofocus>
+          <texturenofocus>Controls/DialogCloseButton.png</texturenofocus>    
         </control>
         <control type="image" id="10004">
           <left>11</left>
           <top>41</top>
           <width>522</width>
-          <height>424</height>
+          <height>444</height>
           <texture></texture>
           <colordiffuse>55FFFFFF</colordiffuse>
         </control>
@@ -45,7 +45,7 @@
           <left>535</left>
           <top>41</top>
           <width>255</width>
-          <height>424</height>
+          <height>444</height>
           <texture></texture>
         </control>
         <control type="label" id="10006">
@@ -266,14 +266,13 @@
         </control>
 
         <control type="group" id="10024">
-          <top>230</top>
+          <top>450</top>
           <left>20</left>
           <width>760</width>
-          <bottom>20</bottom>
           <height>30</height>
 
           <control type="button" id="10025">
-            <top>200</top>
+            <top>0</top>
             <left>0</left>
             <width>110</width>
             <height>30</height>
@@ -284,7 +283,7 @@
             <label>Anterior</label>
           </control>
           <control type="button" id="10026">
-            <top>200</top>
+            <top>0</top>
             <left>115</left>
             <width>110</width>
             <height>30</height>
@@ -295,7 +294,7 @@
             <label>Siguiente</label>
           </control>
           <control type="button" id="10027">
-            <top>200</top>
+            <top>0</top>
             <left>253</left>
             <width>110</width>
             <height>30</height>
@@ -306,7 +305,7 @@
             <label>Cancelar</label>
           </control>
           <control type="button" id="10028">
-            <top>200</top>
+            <top>0</top>
             <left>390</left>
             <width>120</width>
             <height>30</height>
@@ -317,9 +316,9 @@
             <label>Aceptar</label>
           </control>
           <control type="label" id="100029">
-            <top>170</top>
-            <height>100</height>
-            <right>0</right>
+            <top>0</top>
+            <height>30</height>
+            <left>650</left>
             <width>110</width>
             <font>font10</font>
             <textcolor>0xFFFFA500</textcolor>
