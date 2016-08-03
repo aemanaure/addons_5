@@ -3,39 +3,41 @@
     <allowoverlays>false</allowoverlays>  
     <controls>
       <control type="group" id="10001">
-        <centerleft>640</centerleft>
-        <centertop>360</centertop>
+        <left>240</left>
+        <top>110</top>
         <width>800</width>
         <height>500</height>
         <control type="image">
           <texture>Windows/DialogBack.png</texture>
         </control>
         <control type="image">
-          <height>50</height>
+          <height>40</height>
           <texture>Windows/dialogheader.png</texture>
         </control>
         <control type="label" id="10002">
           <top>10</top>
-          <height>40</height>
-          <font>font20_title</font>
+          <left>10</left>
+          <height>34</height>
+          <width>725</width>
+          <font>font12_title</font>
           <textcolor>0xFFFFA500</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>Opciones</label>
         </control>
         <control type="button" id="10003">
-          <right>15</right>
+          <left>735</left>
           <top>15</top>
-          <width>70</width>
-          <height>40</height>
+          <width>50</width>
+          <height>30</height>
           <texturefocus>Controls/DialogCloseButton-focus.png</texturefocus>
           <texturenofocus>Controls/DialogCloseButton.png</texturenofocus>    
         </control>
         <control type="button" id="10004">
-          <centerleft>230</centerleft>
-          <bottom>30</bottom>
-          <width>150</width>
-          <height>40</height>
+          <left>155</left>
+          <top>445</top>
+          <width>120</width>
+          <height>30</height>
           <texturefocus>Controls/KeyboardKey.png</texturefocus>
           <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>  
           <align>center</align>
@@ -43,10 +45,10 @@
           <label>OK</label>
         </control>
         <control type="button" id="10005">
-          <centerleft>400</centerleft>
-          <bottom>30</bottom>
-          <width>150</width>
-          <height>40</height>
+          <left>325</left>
+          <top>445</top>
+          <width>120</width>
+          <height>30</height>
           <texturefocus>Controls/KeyboardKey.png</texturefocus>
           <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>   
           <align>center</align>
@@ -54,10 +56,10 @@
           <label>Cancelar</label>
         </control>
         <control type="button" id="10006">
-          <centerleft>570</centerleft>
-          <bottom>30</bottom>
-          <width>150</width>
-          <height>40</height>
+          <left>495</left>
+          <top>445</top>
+          <width>120</width>
+          <height>30</height>
           <texturefocus>Controls/KeyboardKey.png</texturefocus>
           <texturenofocus>Controls/KeyboardKeyNF.png</texturenofocus>    
           <align>center</align>
@@ -65,26 +67,26 @@
           <label>Por defecto</label>
         </control>
           <control type="group" id="10007">
-          <top>60</top>
-          <left>25</left>
-          <right>50</right>
-          <bottom>80</bottom>
+          <top>45</top>
+          <left>20</left>
+          <width>745</width>
+          <height>387</height>
           <control type="image">
             <texture>Windows/BackControls.png</texture>
           </control>
         </control>
         <control type="image" id="10008">
-          <top>60</top>
-          <left>765</left>
+          <top>45</top>
+          <left>770</left>
           <width>10</width>
-          <height>360</height>
+          <height>387</height>
           <texture>Controls/ScrollBack.png</texture>
         </control>
         <control type="image" id="10009">
-          <top>60</top>
-          <left>765</left>
+          <top>45</top>
+          <left>770</left>
           <width>10</width>
-          <height>360</height>
+          <height>387</height>
           <texture>Controls/ScrollBar.png</texture>
         </control>
       </control>
