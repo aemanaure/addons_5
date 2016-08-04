@@ -16,10 +16,8 @@ import xbmcplugin
 import xbmc
 
 PLATFORM_NAME = "xbmc-plugin"
-
+OLD_PLATFORM = True
 PLUGIN_NAME = "pelisalacarta"
-
-
 
 def get_platform():
     return PLATFORM_NAME
@@ -43,7 +41,7 @@ def get_system_platform():
     elif xbmc.getCondVisibility( "system.platform.osx" ):
         platform = "osx"
     return platform
-    
+
 def open_settings():
     xbmcplugin.openSettings( sys.argv[ 0 ] )
 
@@ -65,7 +63,7 @@ def get_localized_string(code):
         pass
     
     return dev
-    
+
 def get_library_path():
     #return os.path.join( get_data_path(), 'library' )
     default = os.path.join( get_data_path(), 'library' )

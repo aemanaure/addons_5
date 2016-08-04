@@ -50,6 +50,8 @@ class ChannelWindow(xbmcgui.WindowXML):
     def setItemlist(self,itemlist):
         plugintools.log("ChannelWindow.setItemlist")
 
+        self.itemlist = []
+
         for item in itemlist:
             plugintools.log("ChannelWindow.setItemlist item="+item.tostring())
             self.itemlist.append(item)

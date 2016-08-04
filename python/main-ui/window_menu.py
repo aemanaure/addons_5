@@ -50,6 +50,8 @@ class MenuWindow(xbmcgui.WindowXML):
     def setItemlist(self,itemlist):
         plugintools.log("MenuWindow.setItemlist")
 
+        self.itemlist = []
+
         for item in itemlist:
             plugintools.log("MenuWindow.setItemlist item="+item.tostring())
             self.itemlist.append(item)

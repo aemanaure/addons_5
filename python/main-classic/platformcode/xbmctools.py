@@ -35,7 +35,6 @@ import xbmcplugin
 from core import config
 from core import logger
 from platformcode import library
-from channels import descargas
 
 # Esto permite su ejecución en modo emulado
 try:
@@ -46,7 +45,7 @@ except:
 DEBUG = config.get_setting("debug")
 
 def add_new_folder(item, totalItems=0):
-    logger.info('pelisalacarta.platformcode.xbmctools add_new_folder item='+item.tostring())
+    #logger.info('pelisalacarta.platformcode.xbmctools add_new_folder item='+item.tostring())
 
     if item.fulltitle=="":
         item.fulltitle=item.title
@@ -65,7 +64,7 @@ def add_new_folder(item, totalItems=0):
     listitem = xbmcgui.ListItem( item.title, iconImage="DefaultFolder.png", thumbnailImage=item.thumbnail )
 
     if item.action !="":
-        set_infoLabels(listitem,item) # Modificacion introducida por super_berny para añadir infoLabels al ListItem
+        set_infoLabels(listitem,item)
     
     if item.fanart!="":
         listitem.setProperty('fanart_image',item.fanart) 
@@ -77,7 +76,7 @@ def add_new_folder(item, totalItems=0):
         pass
     
     itemurl = '%s?%s' % ( sys.argv[ 0 ] , item.tourl())
-    logger.info("pelisalacarta.platformcode.xbmctools add_new_folder itemurl="+itemurl)
+    #logger.info("pelisalacarta.platformcode.xbmctools add_new_folder itemurl="+itemurl)
 
     #if item.show != "": #Añadimos opción contextual para Añadir la serie completa a la biblioteca
     #    addSerieCommand = "XBMC.RunPlugin(%s?%s)" % ( sys.argv[ 0 ] , item.clone(action="addlist2Library").tourl())
@@ -124,7 +123,7 @@ def add_new_folder(item, totalItems=0):
     return ok
 
 def add_new_video(item, IsPlayable='false', totalItems = 0):
-    logger.info('pelisalacarta.platformcode.xbmctools add_new_video item='+item.tostring())
+    #logger.info('pelisalacarta.platformcode.xbmctools add_new_video item='+item.tostring())
 
     # TODO: Posible error en trailertools.py
     contextCommands = []
@@ -145,7 +144,7 @@ def add_new_video(item, IsPlayable='false', totalItems = 0):
     listitem = xbmcgui.ListItem( item.title, iconImage="DefaultVideo.png", thumbnailImage=item.thumbnail )
 
     if item.action !="":
-        set_infoLabels(listitem,item) # Modificacion introducida por super_berny para añadir infoLabels al ListItem
+        set_infoLabels(listitem,item)
    
     if item.fanart!="":
         #logger.info("item.fanart :%s" %item.fanart)
@@ -168,7 +167,7 @@ def add_new_video(item, IsPlayable='false', totalItems = 0):
         pass
 
     itemurl = '%s?%s' % ( sys.argv[ 0 ] , item.tourl())
-    logger.info("pelisalacarta.platformcode.xbmctools add_new_video itemurl="+itemurl)
+    #logger.info("pelisalacarta.platformcode.xbmctools add_new_video itemurl="+itemurl)
 
     if item.totalItems == 0:
         ok = xbmcplugin.addDirectoryItem( handle = pluginhandle, url=itemurl, listitem=listitem, isFolder=False)
@@ -233,8 +232,6 @@ def play_video(item,desdefavoritos=False,desdedescargados=False,desderrordescarg
 
             if config.get_setting("jdownloader_enabled")=="true":
                 opciones.append(config.get_localized_string(30158)) # "Enviar a JDownloader"
-            if config.get_setting("pyload_enabled")=="true":
-                opciones.append(config.get_localized_string(30158).replace("jDownloader","pyLoad")) # "Enviar a pyLoad"
 
         if default_action=="3":
             seleccion = len(opciones)-1
@@ -384,6 +381,7 @@ def play_video(item,desdefavoritos=False,desdedescargados=False,desderrordescarg
         return
 
     elif opciones[seleccion]==config.get_localized_string(30159): #"Borrar descarga definitivamente"
+        from channels import descargas
         descargas.delete_error_bookmark(urllib.unquote_plus( item.extra ))
 
         advertencia = xbmcgui.Dialog()
@@ -392,6 +390,7 @@ def play_video(item,desdefavoritos=False,desdedescargados=False,desderrordescarg
         return
 
     elif opciones[seleccion]==config.get_localized_string(30160): #"Pasar de nuevo a lista de descargas":
+        from channels import descargas
         descargas.mover_descarga_error_a_pendiente(urllib.unquote_plus( item.extra ))
 
         advertencia = xbmcgui.Dialog()
@@ -415,13 +414,14 @@ def play_video(item,desdefavoritos=False,desdedescargados=False,desderrordescarg
         keyboard.doModal()
         if keyboard.isConfirmed():
             title = keyboard.getText()
-            favoritos.savebookmark(titulo=download_title,url=item.url,thumbnail=download_thumbnail,server=item.server,plot=download_plot,fulltitle=item.title)
+            favoritos.savebookmark(titulo=title,url=item.url,thumbnail=download_thumbnail,server=item.server,plot=download_plot,fulltitle=title)
             advertencia = xbmcgui.Dialog()
-            resultado = advertencia.ok(config.get_localized_string(30102) , item.title , config.get_localized_string(30108)) # 'se ha añadido a favoritos'
+            resultado = advertencia.ok(config.get_localized_string(30102) , title , config.get_localized_string(30108)) # 'se ha añadido a favoritos'
         return
 
     elif opciones[seleccion]==config.get_localized_string(30156): #"Quitar de lista de descargas":
         # La categoría es el nombre del fichero en la lista de descargas
+        from channels import descargas
         descargas.deletebookmark((urllib.unquote_plus( item.extra )))
 
         advertencia = xbmcgui.Dialog()
@@ -447,6 +447,7 @@ def play_video(item,desdefavoritos=False,desdedescargados=False,desderrordescarg
         if keyboard.isConfirmed():
             download_title = keyboard.getText()
 
+            from channels import descargas
             descargas.savebookmark(titulo=download_title,url=item.url,thumbnail=download_thumbnail,server=item.server,plot=download_plot,fulltitle=download_title)
 
             advertencia = xbmcgui.Dialog()
@@ -982,36 +983,18 @@ def alert_no_puedes_ver_video(server,url,motivo):
         resultado = advertencia.ok( "No puedes ver ese vídeo porque...","El servidor donde está alojado no está","soportado en pelisalacarta todavía",url)
 
 def set_infoLabels(listitem,item):
-    '''
-    Metodo para añadir informacion extra al listitem.
-    Se mantiene por retocompatibilidad, pero deberia despreciarse en futuras versiones.
-    '''
-    if item.plot.startswith("{'infoLabels'"):
-        # Esta forma de pasar la informacion al listitem es obsoleta y deberia despreciarse
-        # plot tiene que ser un str con el siguiente formato:
-        #   plot="{'infoLabels':{dicionario con los pares de clave/valor descritos en
-        #               http://mirrors.xbmc.org/docs/python-docs/14.x-helix/xbmcgui.html#ListItem-setInfo}}"
+    """
+    Metodo para pasar la informacion al listitem (ver tmdb.set_InfoLabels() )
+    item.infoLabels es un dicionario con los pares de clave/valor descritos en:
+    http://mirrors.xbmc.org/docs/python-docs/14.x-helix/xbmcgui.html#ListItem-setInfo
+    :param listitem: objeto xbmcgui.ListItem
+    :param item: objeto Item que representa a una pelicula, serie o capitulo
+    :return: None
+    """
+    if item.plot and item.infoLabels.get("plot","") == "":
+        item.infoLabels['plot'] = item.plot
 
-        try:
-            import ast
-            infodict=ast.literal_eval(item.plot)['infoLabels']
+    it = item.clone()
+    it.infoLabels['title'] = it.title
 
-            #if not infodict.has_key('title'): 
-            #    infodict['title'] = item.title
-            infodict['title'] = item.title
-            
-            listitem.setInfo( "video", infodict)
-        except:
-            pass
-
-    elif len(item.infoLabels) >0:
-        # Nuevo modelo para pasar la informacion al listitem (ver tmdb.set_InfoLabels() )
-        # item.infoLabels es un dicionario con los pares de clave/valor descritos en:
-        # http://mirrors.xbmc.org/docs/python-docs/14.x-helix/xbmcgui.html#ListItem-setInfo
-        item.infoLabels['title'] = item.title
-        listitem.setInfo( "video", item.infoLabels)
-
-    elif item.plot !='':
-        # Retrocompatibilidad con canales q no utilizan infoLabels de ningun tipo
-        listitem.setInfo( "video", { "Title" : item.title, "Plot" : item.plot, "Studio" : item.channel.capitalize() } )
-
+    listitem.setInfo("video", it.infoLabels)
