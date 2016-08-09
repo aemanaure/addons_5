@@ -42,7 +42,7 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
     Tambien podemos personalizar el cuadro añadiendole un titulo (title).
 
     Metodo constructor:
-        SettingWindow(listado_controles, dict_values, title, callback, item)
+        SettingWindow(listado_controles, dict_values, title, callback, item, custom_button)
             Parametros:
                 listado_controles: (list) Lista de controles a incluir en la ventana, segun el siguiente esquema:
                     (opcional)list_controls= [
@@ -146,10 +146,16 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 (opcional) title: (str) Titulo de la ventana de configuracion. Se puede localizar mediante un numero
                 precedido de '@'
                 (opcional) callback (str) Nombre de la funcion, del canal desde el que se realiza la llamada, que sera
-                invocada al pulsar
-                    el boton aceptar de la ventana. A esta funcion se le pasara como parametros el objeto 'item' y el
-                    dicionario 'dict_values'
-            Retorno: Si se especifica 'callback' se devolvera lo que devuelva esta funcion. Si no devolvera None
+                invocada al pulsar el boton aceptar de la ventana. A esta funcion se le pasara como parametros
+                el objeto 'item' y el dicionario 'dict_values'
+                (opcional) custom_button (dict): Dicionario que representa un tercer boton que se muestra junto a "OK" y "Cancelar".
+                    Este diccionario tendra las siguientes claves obligatorias:
+                        1. 'label':  Etiqueta mostrada en el boton
+                        2. 'function': Funcion que se llama al pulsar este boton. Recibe el item como argumento.
+                        3. 'visible': Si es True el boton sera mostrado, sino no.
+                        4. 'close': Si es True la ventana se cerrara al pulsar el boton.
+            Retorno: devuelve el valor devuelto por la funcion callback o custom_button['function'] en funcion
+            del boton pulsado o None.
 
     Ejemplos de uso:
         platformtools.show_channel_settings(): Así tal cual, sin pasar ningún argumento, la ventana detecta de que canal
@@ -176,7 +182,12 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
         self.title = title
         self.callback = callback
         self.item = item
-        self.custom_button = custom_button
+        if isinstance(custom_button,dict) and custom_button.has_key('label') and custom_button.has_key('function') and \
+            custom_button.has_key('visible') and custom_button.has_key('close'):
+                self.custom_button = custom_button
+        else:
+            logger.debug("custom_button es None o no tiene el formato adecuado")
+            self.custom_button = None
 
         # Obtenemos el canal desde donde se ha echo la llamada y cargamos los settings disponibles para ese canal
         channelpath = inspect.currentframe().f_back.f_back.f_code.co_filename
@@ -356,13 +367,12 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
         # Ponemos el título
         self.getControl(10002).setLabel(self.title)
 
-        if self.custom_button is not None:
-            if self.custom_button['method'] != "":
-                self.getControl(10006).setLabel(self.custom_button['name'])
-            else:
-                self.getControl(10006).setVisible(False)
-                self.getControl(10004).setPosition(self.getControl(10004).getX() + 80, self.getControl(10004).getY())
-                self.getControl(10005).setPosition(self.getControl(10005).getX() + 80, self.getControl(10005).getY())
+        if self.custom_button is None or not self.custom_button['visible']:
+            self.getControl(10006).setVisible(False)
+            self.getControl(10004).setPosition(self.getControl(10004).getX() + 80, self.getControl(10004).getY())
+            self.getControl(10005).setPosition(self.getControl(10005).getX() + 80, self.getControl(10005).getY())
+        else:
+            self.getControl(10006).setLabel(self.custom_button['label'])
 
         # Obtenemos las dimensiones del area de controles
         self.controls_width = self.getControl(10007).getWidth() - 20
@@ -459,17 +469,17 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 # Creamos el control
                 control = xbmcgui.ControlRadioButton(self.controls_pos_x - 10, -100, self.controls_width + 10,
                                                      self.height_control, label=label, font=font, textColor=color,
-                                                     focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                                'MenuItemFO.png'),
-                                                     noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                                  'MenuItemNF.png'),
-                                                     focusOnTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     focusOnTexture=os.path.join(self.mediapath, 'Controls',
                                                                                  'radiobutton-focus.png'),
-                                                     noFocusOnTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     noFocusOnTexture=os.path.join(self.mediapath, 'Controls',
                                                                                    'radiobutton-focus.png'),
-                                                     focusOffTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     focusOffTexture=os.path.join(self.mediapath, 'Controls',
                                                                                   'radiobutton-nofocus.png'),
-                                                     noFocusOffTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                     noFocusOffTexture=os.path.join(self.mediapath, 'Controls',
                                                                                     'radiobutton-nofocus.png'))
                 # Lo añadimos a la ventana
                 self.addControl(control)
@@ -489,9 +499,9 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 # Creamos el control
                 control = xbmcgui.ControlEdit(self.controls_pos_x, -100, self.controls_width - 5, self.height_control,
                                               label, font=font, isPassword=hidden, textColor=color,
-                                              focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                         'MenuItemFO.png'),
-                                              noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'MenuItemNF.png'))
                 # Lo añadimos a la ventana
                 self.addControl(control)
@@ -514,24 +524,24 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 # Creamos los controles el list se forma de 3 controles
                 control = xbmcgui.ControlButton(self.controls_pos_x, -100, self.controls_width, self.height_control,
                                                 label, font=font, textOffsetX=0, textColor=color,
-                                                focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'MenuItemFO.png'),
-                                                noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                             'MenuItemNF.png'))
 
                 label = xbmcgui.ControlLabel(self.controls_pos_x, -100, self.controls_width - 30, self.height_control,
                                              lvalues[value], font=font, textColor=color, alignment=4 | 1)
 
                 upBtn = xbmcgui.ControlButton(self.controls_pos_x + self.controls_width - 25, -100, 20, 15, '',
-                                              focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                         'spinUp-Focus.png'),
-                                              noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                              noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'spinUp-noFocus.png'))
 
                 downBtn = xbmcgui.ControlButton(self.controls_pos_x + self.controls_width - 25, -100 + 15, 20, 15, '',
-                                                focusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                focusTexture=os.path.join(self.mediapath, 'Controls',
                                                                           'spinDown-Focus.png'),
-                                                noFocusTexture=os.path.join(self.mediapath, 'ChannelSettings',
+                                                noFocusTexture=os.path.join(self.mediapath, 'Controls',
                                                                             'spinDown-noFocus.png'))
 
                 # Los añadimos a la ventana
@@ -748,15 +758,7 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
     def onClick(self, id):
         # Valores por defecto
         if id == 10006:
-            if self.custom_button['method'] != "":
-                self.close()
-                cb_channel = None
-                try:
-                    cb_channel = __import__('channels.%s' % self.channel, fromlist=["channels.%s" % self.channel])
-                except ImportError:
-                    logger.error('Imposible importar %s' % self.channel)
-                self.return_value = getattr(cb_channel, self.custom_button['method'])(self.item)
-            else:
+            if self.custom_button['function'] == "SettingsWindow_default":
                 for c in self.controls:
                     if c["type"] == "text":
                         c["control"].setText(c["default"])
@@ -771,6 +773,21 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 self.evaluate_conditions()
                 self.check_default()
                 self.check_ok()
+
+            else:
+                if self.custom_button['close']:
+                    self.close()
+
+                cb_channel = None
+                try:
+                    cb_channel = __import__('channels.%s' % self.channel, fromlist=["channels.%s" % self.channel])
+                except ImportError:
+                    logger.error('Imposible importar %s' % self.channel)
+                self.return_value = getattr(cb_channel, self.custom_button['function'])(self.item)
+
+
+
+
 
         # Boton Cancelar y [X]
         if id == 10003 or id == 10005:

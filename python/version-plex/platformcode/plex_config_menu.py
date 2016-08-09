@@ -16,15 +16,17 @@ from core import jsontools as json
 from core import channeltools
 import inspect
 
-__channel__ ="platformcode.plex_config_menu"
+__channel__ = "platformcode.plex_config_menu"
 
 params = {}
-    
+
+
 def isGeneric():
     return True 
 
 
-def show_channel_settings(list_controls=None, dict_values=None, caption="", channelname="", callback=None,item=None):
+def show_channel_settings(list_controls=None, dict_values=None, caption="", channelname="", callback=None,item=None,
+                          custom_button=None):
     ''' Funcion que permite utilizar cuadros de configuracion personalizados.
     
     show_channel_settings(listado_controles, dict_values, caption, callback, item)
@@ -124,11 +126,19 @@ def show_channel_settings(list_controls=None, dict_values=None, caption="", chan
                         dict_values={"nameControl1": False,
                                      "nameControl2": "Esto es un ejemplo"}
                 
-                (opcional) caption: (str) Titulo de la ventana de configuracion. Se puede localizar mediante un numero precedido de '@'
-                (opcional) callback (str) Nombre de la funcion, del canal desde el que se realiza la llamada, que sera invocada al pulsar 
-                    el boton aceptar de la ventana. A esta funcion se le pasara como parametros el objeto 'item' y el dicionario 'dict_values'
-            Retorno: Si se especifica 'callback' se devolvera lo que devuelva esta funcion. Si no devolvera None     
-    
+                ((opcional) caption: (str) Titulo de la ventana de configuracion. Se puede localizar mediante un numero
+                precedido de '@'
+                (opcional) callback (str) Nombre de la funcion, del canal desde el que se realiza la llamada, que sera
+                invocada al pulsar el boton aceptar de la ventana. A esta funcion se le pasara como parametros
+                el objeto 'item' y el dicionario 'dict_values'
+                (opcional) custom_button (dict): Dicionario que representa un tercer boton que se muestra junto a "OK" y "Cancelar".
+                    Este diccionario tendra las siguientes claves obligatorias:
+                        1. 'label':  Etiqueta mostrada en el boton
+                        2. 'function': Funcion que se llama al pulsar este boton. Recibe el item como argumento.
+                        3. 'visible': Si es True el boton sera mostrado, sino no.
+                        4. 'close': Si es True la ventana se cerrara al pulsar el boton.
+            Retorno: devuelve el valor devuelto por la funcion callback o custom_button['function'] en funcion
+            del boton pulsado o None.
     Ejemplos de uso:
         platformtools.show_channel_settings(): Así tal cual, sin pasar ningún argumento, la ventana detecta de que canal se ha hecho la llamada, 
             y lee los ajustes del XML y carga los controles, cuando le das a Aceptar los vuelve a guardar.
@@ -141,7 +151,12 @@ def show_channel_settings(list_controls=None, dict_values=None, caption="", chan
     logger.info("[plex_config_menu] show_channel_settings")
     global params
     itemlist = []
-      
+    if not(isinstance(custom_button, dict) and custom_button.has_key('label') and custom_button.has_key('function') and \
+            custom_button.has_key('visible') and custom_button.has_key('close')):
+        logger.debug("custom_button es None o no tiene el formato adecuado")
+        custom_button = None
+
+
     #Cuando venimos de hacer click en un control de la ventana, channelname ya se pasa como argumento, si no lo tenemos, detectamos de donde venimos
     if not channelname:
       channelpath = inspect.currentframe().f_back.f_back.f_code.co_filename
@@ -219,15 +234,14 @@ def show_channel_settings(list_controls=None, dict_values=None, caption="", chan
             item.value = dict_values[c["id"]]
             itemlist.append(item)        
 
-            
-        
-    params = {"list_controls":list_controls, "dict_values":dict_values, "caption":caption, "channelname":channelname, "callback":callback, "item":item}
+    params = {"list_controls":list_controls, "dict_values":dict_values, "caption":caption, "channelname":channelname,
+              "callback":callback, "item":item, "custom_button":custom_button}
     if itemlist:
     
-        #Creamos un itemlist nuevo añadiendo solo los items que han pasado la evaluacion
+        # Creamos un itemlist nuevo añadiendo solo los items que han pasado la evaluacion
         evaluated = []
         for x in range(len(list_controls)):
-          #por el momento en PLEX, tanto si quedan disabled, como no visible, los ocultamos (quitandolos del itemlist)
+          # por el momento en PLEX, tanto si quedan disabled, como no visible, los ocultamos (quitandolos del itemlist)
           visible = evaluate(x, list_controls[x]["enabled"]) and evaluate(x, list_controls[x]["visible"])
           if visible:
             evaluated.append(itemlist[x])
@@ -236,8 +250,9 @@ def show_channel_settings(list_controls=None, dict_values=None, caption="", chan
         evaluated.insert(0,Item(channel=__channel__, action="control_label_click", title=caption))    
         # Añadir item aceptar y cancelar
         evaluated.append(Item(channel=__channel__, action="ok_Button_click", title="Aceptar"))
-        evaluated.append(Item(channel=channelname, action="mainlist", title="Cancelar"))  
-        evaluated.append(Item(channel=__channel__, action="default_Button_click", title="Por defecto")) 
+        evaluated.append(Item(channel=channelname, action="mainlist", title="Cancelar"))
+        if custom_button is not None and custom_button['visible']:
+            evaluated.append(Item(channel=__channel__, action="default_Button_click", title=custom_button['label']))
          
     return evaluated
 
@@ -433,16 +448,28 @@ def ok_Button_click(item):
           exec "itemlist = channelmodule.mainlist(Item())"
       return itemlist
 
-#Para restablecer los controles al valor por defecto     
+
 def default_Button_click(item):
     global params
-    
+
     list_controls = params["list_controls"]
     dict_values = params["dict_values"]
-    
-    for c in list_controls:
-      if not 'default' in c: c["default"] = ''
-      dict_values[c["id"]] = c["default"]
-      
-    return show_channel_settings(**params)
-    
+    channel = params["channelname"]
+    custom_button = params['custom_button']
+
+    if custom_button['function'] == "SettingsWindow_default":
+        # Para restablecer los controles al valor por defecto
+        for c in list_controls:
+          if not 'default' in c: c["default"] = ''
+          dict_values[c["id"]] = c["default"]
+
+        return show_channel_settings(**params)
+
+    else:
+        exec "from channels import " + channel + " as cb_channel"
+        exec "itemlist = cb_channel." + custom_button['function'] + "(item)"
+        if not type(itemlist) == list:
+            exec "from channels import " + channel + " as channelmodule"
+            exec "itemlist = channelmodule.mainlist(Item())"
+        return itemlist
+
