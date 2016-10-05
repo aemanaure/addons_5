@@ -83,7 +83,7 @@ def play_video(item):
 
 
 def show_channel_settings(list_controls=None, dict_values=None, caption="", callback=None, item=None,
-                          custom_button=BUTTON_DEFAULT):
+                          custom_button=BUTTON_DEFAULT, channelpath = None):
     """
     Muestra un cuadro de configuracion personalizado para cada canal y guarda los datos al cerrarlo.
 
@@ -110,4 +110,4 @@ def show_channel_settings(list_controls=None, dict_values=None, caption="", call
     """
     from platformcode import plex_config_menu
     return plex_config_menu.show_channel_settings(list_controls=list_controls, dict_values=dict_values, caption=caption,
-                                                  callback=callback, item=item, custom_button=custom_button)
+                                                  callback=callback, item=item, custom_button=custom_button, channelpath=channelpath)

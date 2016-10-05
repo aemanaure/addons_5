@@ -25,8 +25,8 @@ def isGeneric():
     return True 
 
 
-def show_channel_settings(list_controls=None, dict_values=None, caption="", channelname="", callback=None,item=None,
-                          custom_button=None):
+def show_channel_settings(list_controls=None, dict_values=None, caption="", callback=None,item=None,
+                          custom_button=None, channelpath =None):
     ''' Funcion que permite utilizar cuadros de configuracion personalizados.
     
     show_channel_settings(listado_controles, dict_values, caption, callback, item)
@@ -158,9 +158,9 @@ def show_channel_settings(list_controls=None, dict_values=None, caption="", chan
 
 
     #Cuando venimos de hacer click en un control de la ventana, channelname ya se pasa como argumento, si no lo tenemos, detectamos de donde venimos
-    if not channelname:
+    if not channelpath:
       channelpath = inspect.currentframe().f_back.f_back.f_code.co_filename
-      channelname = os.path.basename(channelpath).replace(".py", "")
+    channelname = os.path.basename(channelpath).replace(".py", "")
       
     
     #Si no tenemos list_controls, hay que sacarlos del xml del canal

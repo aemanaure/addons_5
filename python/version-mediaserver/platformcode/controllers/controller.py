@@ -111,5 +111,5 @@ class Platformtools(object):
   def play_video(self, item):
     pass
  
-  def show_channel_settings(self, list_controls=None, dict_values=None, caption="", callback=None, item=None):
+  def show_channel_settings(self, list_controls=None, dict_values=None, caption="", callback=None, item=None, custom_button=None, channelpath=None):
     pass
