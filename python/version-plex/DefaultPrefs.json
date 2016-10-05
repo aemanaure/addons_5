@@ -12,6 +12,12 @@
     "default": "true"
   },
   {
+    "id": "realdebridpremium",
+    "label": "Cuenta premium Real Debrid (Activar en menú ayuda)",
+    "type": "bool",
+    "default": "false"
+  },
+  {
     "id": "alldebridpremium",
     "label": "Cuenta premium All Debrid",
     "type": "bool",

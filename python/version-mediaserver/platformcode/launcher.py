@@ -529,12 +529,12 @@ def filtered_servers(itemlist, server_white_list, server_black_list):
 
 def add_to_favorites(item):
     #Proviene del menu contextual:
-    if "item_action" in item: 
+    if "item_action" in item:
       item.action = item.item_action
       del item.item_action
       item.context=[]
-      
-    from core import favoritos
+
+    from channels import favoritos
     from core import downloadtools
     if not item.fulltitle: item.fulltitle = item.title
     title = platformtools.dialog_input(default=downloadtools.limpia_nombre_excepto_1(item.fulltitle)+" ["+item.channel+"]")
@@ -545,7 +545,7 @@ def add_to_favorites(item):
     return
     
 def remove_from_favorites(item):
-    from core import favoritos
+    from channels import favoritos
     # En "extra" está el nombre del fichero en favoritos
     favoritos.deletebookmark(item.extra)
     platformtools.dialog_ok("Pelisalacarta", config.get_localized_string(30102) +"\n"+ item.title +"\n"+ config.get_localized_string(30105))
@@ -583,7 +583,7 @@ def add_to_downloads(item):
     if "item_action" in item: 
       item.action = item.item_action
       del item.item_action
-      
+
     from core import descargas
     from core import downloadtools
     if not item.fulltitle: item.fulltitle = item.title
@@ -591,7 +591,7 @@ def add_to_downloads(item):
     if title is not None:
       item.title = title
       descargas.savebookmark(item)
-        
+
     platformtools.dialog_ok("Pelisalacarta", config.get_localized_string(30101) +"\n"+ item.title +"\n"+ config.get_localized_string(30109))
     return
 
@@ -603,7 +603,7 @@ def remove_from_downloads(item):
   platformtools.dialog_ok("Pelisalacarta", config.get_localized_string(30101) +"\n"+ item.title +"\n"+ config.get_localized_string(30106))
   platformtools.itemlist_refresh()
   return
-  
+
 def delete_file(item):
   os.remove(item.url)
   platformtools.itemlist_refresh()
