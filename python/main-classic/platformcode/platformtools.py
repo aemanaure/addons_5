@@ -43,6 +43,8 @@ from core.item import Item
 
 DEBUG = config.get_setting("debug")
 
+BUTTON_DEFAULT = {'label': "Por defecto", 'function': 'SettingsWindow_default', 'visible': True, 'close': False}
+
 
 def dialog_ok(heading, line1, line2="", line3=""):
     dialog = xbmcgui.Dialog()
@@ -489,7 +491,7 @@ def get_seleccion(default_action, opciones, seleccion, video_urls):
 
 
 def show_channel_settings(list_controls=None, dict_values=None, caption="", callback=None, item=None,
-                          custom_button=None):
+                          custom_button=BUTTON_DEFAULT, channelpath=None):
     """
     Muestra un cuadro de configuracion personalizado para cada canal y guarda los datos al cerrarlo.
     
@@ -500,20 +502,24 @@ def show_channel_settings(list_controls=None, dict_values=None, caption="", call
     @type dict_values: dict
     @param caption: titulo de la ventana
     @type caption: str
-    @param callback: función que se llama tras cerrarse la ventana.
+    @param callback: función que se llama al pulsar el boton 'Ok'. Recibe item y dict_values como argumentos.
     @type callback: str
     @param item: item para el que se muestra la ventana de configuración.
     @type item: Item
     @param custom_button: botón personalizado, que se muestra junto a "OK" y "Cancelar".
-    @type custom_button: dict
+    @type custom_button: dict con las siguientes claves obligatorias:
+        1. 'label':  Etiqueta mostrada en el boton
+        2. 'function': Funcion que se llama al pulsar este boton. Recibe el item como argumento.
+        3. 'visible': Si es True el boton sera mostrado, sino no.
+        4. 'close': Si es True la ventana se cerrara al pulsar el boton.
 
-    @return: devuelve la ventana con los elementos
+    @return: devuelve el valor devuelto por la funcion callback o custom_button['function'] en funcion del boton pulsado.
     @rtype: SettingsWindow
     """
     from xbmc_config_menu import SettingsWindow
     return SettingsWindow("ChannelSettings.xml", config.get_runtime_path())\
         .start(list_controls=list_controls, dict_values=dict_values, title=caption, callback=callback, item=item,
-               custom_button=custom_button)
+               custom_button=custom_button, channelpath=channelpath)
 
 
 def show_video_info(data, caption="", callback=None, item=None):

@@ -482,7 +482,7 @@ class platform(Platformtools):
     JsonData["data"] = {}
     self.send_message(JsonData)
 
-  def show_channel_settings(self, list_controls=None, dict_values=None, caption="", callback=None, item=None):
+  def show_channel_settings(self, list_controls=None, dict_values=None, caption="", callback=None, item=None, custom_button=None, channelpath=channelpath):
     from core import config
     from core import channeltools
     import inspect
@@ -494,7 +494,8 @@ class platform(Platformtools):
 
 
     #Obtenemos el canal desde donde se ha echo la llamada y cargamos los settings disponibles para ese canal
-    channelpath = inspect.currentframe().f_back.f_back.f_code.co_filename
+    if not channelpath:
+      channelpath = inspect.currentframe().f_back.f_back.f_code.co_filename
     channelname = os.path.basename(channelpath).replace(".py", "")
 
     #Si no tenemos list_controls, hay que sacarlos del xml del canal
