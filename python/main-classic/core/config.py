@@ -32,7 +32,7 @@ import xbmcaddon
 
 PLATFORM_NAME = "kodi-krypton"
 OLD_PLATFORM = False
-PLUGIN_NAME = "pelisalacarta"
+PLUGIN_NAME = "pelisalacarta-betaSB"
 
 __settings__ = xbmcaddon.Addon(id="plugin.video." + PLUGIN_NAME)
 __language__ = __settings__.getLocalizedString
@@ -75,7 +75,7 @@ def get_setting(name, channel=""):
 
     Devuelve el valor del parametro 'name' en la configuracion global o en la configuracion propia del canal 'channel'.
 
-    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta\settings_channels el
+    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta-betaSB\settings_channels el
     archivo channel_data.json y lee el valor del parametro 'name'. Si el archivo channel_data.json no existe busca en la
      carpeta channels el archivo channel.xml y crea un archivo channel_data.json antes de retornar el valor solicitado.
     Si el parametro 'name' no existe en channel_data.json lo busca en la configuracion global y si ahi tampoco existe
@@ -129,7 +129,7 @@ def set_setting(name,value, channel=""):
     canal 'channel'.
     Devuelve el valor cambiado o None si la asignacion no se ha podido completar.
 
-    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta\settings_channels el
+    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta-betaSB\settings_channels el
     archivo channel_data.json y establece el parametro 'name' al valor indicado por 'value'. Si el archivo
     channel_data.json no existe busca en la carpeta channels el archivo channel.xml y crea un archivo channel_data.json
     antes de modificar el parametro 'name'.
@@ -296,8 +296,11 @@ def verify_directories_created():
     # Create library_path if not exists
     # TODO si tiene smb se debería poder dejar que cree? filetools permite crear carpetas para SMB
     if not get_library_path().lower().startswith("smb") and not os.path.exists(get_library_path()):
-        logger.debug("Creating library_path " + get_library_path())
-        filetools.mkdir(get_library_path())
+        librarypath = get_library_path()
+        logger.debug("Creating library_path " + librarypath)
+        if filetools.mkdir(librarypath):
+            set_setting("librarypath", librarypath)
+            set_setting("library_version", "v4")
 
     # Create settings_path is not exists
     settings_path = filetools.join(get_data_path(), "settings_channels")

@@ -33,7 +33,7 @@ from xbmcaddon import Addon
 from core import config
 from core import logger
 
-__settings__ = Addon( "plugin.video.pelisalacarta" )
+__settings__ = Addon( "plugin.video.pelisalacarta-betaSB" )
 __addonDir__ = __settings__.getAddonInfo( "path" )
 
 DEFAULT_CAPTCHA = os.path.join( __addonDir__, "resources","images","noimage.gif")

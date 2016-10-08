@@ -87,7 +87,7 @@ def run():
             itemlist = channelselector.getmainlist()
 
             # Check for updates only on first screen
-            if config.get_setting("updatecheck2") == "true":
+            if False: #config.get_setting("updatecheck2") == "true":
                 logger.info("pelisalacarta.platformcode.launcher Check for plugin updates enabled")
                 from core import updater
                 

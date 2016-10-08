@@ -48,7 +48,7 @@ from platformcode import platformtools
 
 addon_name = sys.argv[0].strip()
 if not addon_name or addon_name.startswith("default.py"):
-    addon_name = "plugin://plugin.video.pelisalacarta/"
+    addon_name = "plugin://plugin.video.pelisalacarta-betaSB/"
 
 modo_cliente = int(config.get_setting("library_mode"))
 # Host name where XBMC is running, leave as localhost if on this PC
@@ -215,7 +215,7 @@ def save_library_movie(item):
 
             # actualizamos la biblioteca de Kodi con la pelicula
             # TODO arreglar el porque hay que poner la ruta special
-            #ruta = "special://home/userdata/addon_data/plugin.video.pelisalacarta/library/CINE/"
+            #ruta = "special://home/userdata/addon_data/plugin.video.pelisalacarta-betaSB/library/CINE/"
             update()
 
             return insertados, sobreescritos, fallidos
@@ -452,7 +452,7 @@ def save_library_episodes(path, episodelist, serie, silent=False, overwrite= Tru
 
         # ... y actualizamos la biblioteca de Kodi
         # TODO arreglar el porque hay que poner la ruta special
-        #ruta = "special://home/userdata/addon_data/plugin.video.pelisalacarta/library/SERIES/" + \
+        #ruta = "special://home/userdata/addon_data/plugin.video.pelisalacarta-betaSB/library/SERIES/" + \
         #      os.path.basename(path) + "/"
         update(get_library_path_kodi_update(FOLDER_TVSHOWS))
 

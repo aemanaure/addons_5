@@ -280,7 +280,7 @@ class Item(object):
     def fromurl(self, url):
         '''
         Genera un item a partir de una cadena de texto. La cadena puede ser creada por la funcion tourl() o tener
-        el formato antiguo: plugin://plugin.video.pelisalacarta/?channel=... (+ otros parametros)
+        el formato antiguo: plugin://plugin.video.pelisalacarta-betaSB/?channel=... (+ otros parametros)
         Uso: item.fromurl("cadena")
         '''
         if "?" in url: url = url.split("?")[1]

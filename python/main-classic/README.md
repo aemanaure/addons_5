@@ -10,13 +10,13 @@ If you are using Mac OS X you can do this with these commands.
 
 cd 
 cd Library/Application\ Support/Kodi/addons/
-ln -s /Users/jesus/pelisalacarta/python/main-classic plugin.video.pelisalacarta
+ln -s /Users/jesus/pelisalacarta/python/main-classic plugin.video.pelisalacarta-betaSB
 
 If you are using Linux commands are
 
 cd 
 cd .kodi/addons
-ln -s /home/jesus/pelisalacarta/python/main-classic plugin.video.pelisalacarta
+ln -s /home/jesus/pelisalacarta/python/main-classic plugin.video.pelisalacarta-betaSB
 
 On Windows i leave it as exercise :)
 
