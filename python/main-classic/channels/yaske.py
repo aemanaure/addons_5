@@ -5,9 +5,6 @@
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 import re
-import sys
-import urllib
-import urlparse
 
 from core import channeltools
 from core import config
@@ -17,12 +14,19 @@ from core import scrapertoolsV2
 from core import servertools
 from core import tmdb
 from core.item import Item
+from channels import autoplay
 
 HOST = 'http://www.yaske.ro'
 parameters= channeltools.get_channel_parameters('yaske')
 fanart_host= parameters['fanart']
 thumbnail_host= parameters['thumbnail']
 color1, color2, color3 = ['0xFFA5F6AF','0xFF5FDA6D','0xFF11811E']
+
+# Autoplay
+list_servers = ["streamango", "openload", "rapidvideo"]
+list_quality = ["HD 1080", "HD Real 720", "HD Rip 480", "Blu-ray Screener", "DVD-Rip",
+                "DVD-Screener", "TS-Screener HQ", "TS-Screener", "Cam"]
+
 
 def mainlist(item):
     logger.info()
@@ -31,6 +35,9 @@ def mainlist(item):
     item.text_color = color2
     item.fanart = fanart_host
     thumbnail = "https://raw.githubusercontent.com/master-1970/resources/master/images/genres/4/verdes/%s.png"
+
+    # Autoplay
+    autoplay.init(item.channel, list_servers, list_quality)
 
     itemlist.append(item.clone(title="Novedades", action="peliculas", text_blod= True, viewcontent='movies',
                                 url = HOST + "/ultimas-y-actualizadas",
@@ -52,6 +59,10 @@ def mainlist(item):
 
     itemlist.append(item.clone(title="", folder=False))
     itemlist.append(item.clone(title="Buscar por título", action="search", thumbnail=thumbnail % 'buscar') )
+
+    # Autoplay
+    itemlist.append(item.clone(title="", folder=False))
+    autoplay.show_option(item.channel, itemlist)
 
     return itemlist
 
@@ -149,9 +160,9 @@ def peliculas(item):
             if idioma.endswith("la_la.png"):
                 idiomas_disponibles.append("LAT")
             elif idioma.endswith("en_en.png"):
-                idiomas_disponibles.append("VO")
+                idiomas_disponibles.append("ENG")
             elif idioma.endswith("en_es.png"):
-                idiomas_disponibles.append("VOSE")
+                idiomas_disponibles.append("SUB")
             elif idioma.endswith("es_es.png"):
                 idiomas_disponibles.append("ESP")
 
@@ -164,7 +175,7 @@ def peliculas(item):
 
         itemlist.append(Item(channel=item.channel, action="findvideos", title=title, url=scrapedurl,
                                 thumbnail=scrapedthumbnail, contentTitle=contentTitle,
-                                infoLabels={"year":year}, text_color = color1))
+                                infoLabels={"year":year}, text_color = color1, context = autoplay.context))
 
     # Obtenemos los datos basicos de todas las peliculas mediante multihilos
     tmdb.set_infoLabels(itemlist)
@@ -225,7 +236,7 @@ def findvideos(item):
     logger.info()
     itemlist = list()
     sublist = list()
-
+    list_language = ["Español", "Latino", "Subtitulado", "Ingles"]
 
     # Descarga la página
     data = httptools.downloadpage(item.url).data
@@ -244,14 +255,23 @@ def findvideos(item):
 
     sublist = servertools.get_servers_itemlist(sublist, lambda i: "Ver en %s %s" % (i.server, i.quality), True)
 
+    # Autoplay
+    if autoplay.is_active():
+        status_language = config.get_setting("filter_languages", item.channel)
+        if status_language != 0:
+            list_language = list_language[status_language - 1:status_language]
+
+
     # Añadir servidores encontrados, agrupandolos por idioma
-    for k in ["Español", "Latino", "Subtitulado", "Ingles"]:
+    for k in list_language:
         lista_idioma = filter(lambda i: i.language == k, sublist)
         if lista_idioma:
             itemlist.append(Item(channel=item.channel, title=k, fanart=item.fanart, folder=False,
                             text_color=color2, text_blod=True, thumbnail=thumbnail_host))
             itemlist.extend(lista_idioma)
 
+    # Autoplay
+    autoplay.start(itemlist, item)
 
     # Insertar items "Buscar trailer" y "Añadir a la biblioteca"
     if itemlist and item.extra != "library":
