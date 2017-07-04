@@ -62,7 +62,7 @@ def mainlist(item):
 
     # Autoplay
     itemlist.append(item.clone(title="", folder=False))
-    autoplay.show_option(item.channel, itemlist)
+    autoplay.show_option(item.channel, itemlist, text_color=color3, fanart=item.fanart)
 
     return itemlist
 

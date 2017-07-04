@@ -4,7 +4,7 @@
 # Canal para wopelis
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
-import re, urllib, urlparse
+import re
 
 from core import config
 from core import logger
@@ -14,6 +14,7 @@ from core import servertools
 from core import channeltools
 from core import tmdb
 from core.item import Item
+from channels import autoplay
 
 HOST = 'http://www.wopelis.com'
 __channel__= 'wopelis'
@@ -21,6 +22,10 @@ parameters= channeltools.get_channel_parameters(__channel__)
 fanart_host= parameters['fanart']
 thumbnail_host= parameters['thumbnail']
 color1, color2, color3 = ['0xFF58D3F7','0xFF2E64FE','0xFF0404B4']
+
+# Autoplay
+list_servers = ["powvideo", "streamcloud", "streamplay", "openload", "netutv", "flashx", "streaminto", 'directo']
+list_quality = ["HD1080", "HD720", "HDRip", "Rip", "Screener"]
 
 
 def mainlist(item):
@@ -32,6 +37,10 @@ def mainlist(item):
 
     item.thumbnail = "https://github.com/master-1970/resources/raw/master/images/genres/0/Directors%20Chair.png"
     url = HOST + "/galep.php?solo=cenlaces&empen=0"
+
+    # Autoplay
+    autoplay.init(item.channel, list_servers, list_quality)
+
     itemlist.append(item.clone(title="Películas:", folder=False, text_color = color3, text_blod= True))
     itemlist.append(item.clone(title="    Recientes", action="listado", url= url))
     itemlist.append(item.clone(title="    Mas populares de la semana", action="listado", url=url+"&ord=popu"))
@@ -47,6 +56,10 @@ def mainlist(item):
     itemlist.append(item.clone(title="    Mas populares de la semana", action="listado", url=url + "&ord=popu"))
     itemlist.append(item.clone(title="    Por géneros", action="generos", url= HOST + "/series.php"))
     itemlist.append(item.clone(title="    Buscar serie", action="search", url=url + "&ord=popu"))
+
+    # Autoplay
+    itemlist.append(item.clone(title="", folder=False))
+    autoplay.show_option(item.channel, itemlist, text_color=color3, fanart=item.fanart)
 
     return itemlist
 
@@ -169,6 +182,7 @@ def listado(item):
             return []
 
         new_item.title = "%s (%s)" % (title, year)
+        new_item.context = autoplay.context
 
         itemlist.append(new_item)
 
@@ -255,8 +269,9 @@ def get_episodio(item):
 def findvideos(item):
     logger.info()
     itemlist = []
-    dic_langs = {'esp': 'Español', 'english': 'Ingles', 'japo': 'Japones', 'argentina': 'Latino', 'ntfof':''}
-    dic_servers = {'ntfof': 'Servidor Desconocido', 'stramango': 'streamango', 'flasht': 'flashx'}
+    dic_langs = {'esp': 'Español', 'argentina': 'Latino', 'english': 'Ingles', 'japo': 'Japones', 'ntfof': ""}
+    list_language = ['Español', 'Latino', 'Ingles', 'Japones']
+    dic_servers = {'ntfof': 'directo', 'stramango': 'streamango', 'flasht': 'flashx'}
 
     data1 = downloadpage(item.url)
     patron = 'onclick="redir\(([^\)]+).*?'
@@ -272,12 +287,13 @@ def findvideos(item):
 
     for t in list_showlinks:
         data = scrapertools.find_single_match(data1, t[1])
+        sublist = list()
         
         if data:
             itemlist.append(Item(title=t[0], text_color = color3, text_blod= True,
                                  folder=False, thumbnail = thumbnail_host ))
 
-            for redir, server, quality, langs in scrapertools.find_multiple_matches(data, patron): #, server, quality, langs
+            for redir, server, quality, langs in scrapertools.find_multiple_matches(data, patron):
                 redir = redir.split(",")
                 url = redir[0][1:-1]
                 id = redir[1][1:-1]
@@ -292,8 +308,25 @@ def findvideos(item):
 
                 if server in dic_servers: server = dic_servers[server]
 
-                itemlist.append(item.clone(url=url, action="play", language=idioma, contentQuality=quality, server=server,
+                sublist.append(item.clone(url=url, action="play", language=idioma, contentQuality=quality, server=server,
                                            title="    %s: %s [%s]" % (server.capitalize(), idioma, quality)))
+
+            # Autoplay
+            if autoplay.is_active():
+                status_language = config.get_setting("filter_languages", item.channel)
+                if status_language != 0:
+                    list_language = list_language[status_language - 1:status_language]
+
+            # Añadir servidores encontrados, agrupandolos por idioma
+            for k in list_language:
+                lista_idioma = filter(lambda i: i.language == k, sublist)
+                if lista_idioma:
+                    itemlist.append(Item(channel=item.channel, title=k, fanart=item.fanart, folder=False,
+                                         text_color=color2, text_blod=True, thumbnail=thumbnail_host))
+                    itemlist.extend(lista_idioma)
+
+    # Autoplay
+    autoplay.start(itemlist, item)
 
 
     if itemlist and config.get_library_support() and not "library" in item.extra:

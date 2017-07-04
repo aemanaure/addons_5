@@ -70,9 +70,13 @@ def show_option (channel, itemlist, text_color='yellow', thumbnail=None, fanart=
 
 def start (itemlist, item):
     '''
-    Metodo principal desde donde se reproduce automaticamente los enlaces
-    - En caso la opcion de personalizar activa utilizara las opciones definidas por el usuario.
-    - En caso contrario intentara reproducir cualquier enlace que cuente con el idioma preferido.
+    Metodo principal desde donde se reproducen automaticamente los enlaces contenidos en itemlist.
+
+    Se recorre la lista de enlaces hasta que se logra reproducir uno de los enlaces o se llega al final de la lista.
+    Si el canal tiene configurados "custom_servers" y/o "custom_quality" (cuadro de configuracion Autoplay),
+    se utilizaran estos datos para ordenar la lista de enlaces.
+    Si "filter_languages" en la configuracion del canal representa un valor distinto de "No filtrar", se filtra la lista
+     de enlaces por el idioma representado (listado de idiomas obtenido del xml).
 
     :param itemlist: list (lista de items listos para reproducir, o sea con action='play')
     :param item: item (el item principal del canal)
@@ -141,6 +145,10 @@ def start (itemlist, item):
                 favorite_quality.append(channel_node['quality'][settings_node['quality_%s' % num]])
 
 
+            # Obtenemos el idioma seleccionado para filtrar
+            idioma_select = get_languages(item.channel)[
+                config.get_setting("filter_languages", item.channel, default=0)]
+            idioma_select = unicode(idioma_select, "utf8").lower().encode("utf8")
 
             # Se filtran los enlaces de itemlist y que se correspondan con los valores de autoplay
             for item in itemlist:
@@ -148,6 +156,10 @@ def start (itemlist, item):
 
                 # Comprobamos q se trata de un item de video
                 if 'server' not in item:
+                    continue
+
+                # Filtrado por idioma si es necesario
+                if idioma_select != "no filtrar" and idioma_select != unicode(item.language, "utf8").lower().encode("utf8"):
                     continue
 
                 # Agrega la opcion configurar AutoPlay al menu contextual
@@ -293,6 +305,7 @@ def start (itemlist, item):
         # devuelve la lista de enlaces para la eleccion manual
         return itemlist
 
+
 def init(channel, list_servers, list_quality):
     '''
     Comprueba la existencia de canal en el archivo de configuracion de Autoplay y si no existe lo añade. 
@@ -394,10 +407,10 @@ def check_value (channel, itemlist):
 
 
     for item in itemlist:
-        if item.server not in server_list:
+        if item.server and item.server not in server_list:
             server_list.append(item.server)
             change = True
-        if item.quality not in quality_list:
+        if item.quality and item.quality not in quality_list:
             quality_list.append(item.quality)
             change = True
 
@@ -432,23 +445,24 @@ def autoplay_config(item):
     list_controls.append(active_settings)
     dict_values['active'] = settings_node.get('active', False)
 
+    separador = {"id": "label", "label":
+                "____________________________________________________________________________________________",
+                 "type": "label", "enabled": True, "visible": True}
+
+    list_controls.append(separador)
+
 
     # Idioma
     status_language = config.get_setting("filter_languages", item.from_channel)
     if not status_language:
         status_language = 0
 
-    set_language = {"id": "language", "label": "Idioma para AutoPlay (Opcional)", "color": "0xffffff99",
-                    "type": "list", "default": 0, "enabled": "eq(-1,true)", "visible": True,
+    set_language = {"id": "language", "label": "      Filtrar enlaces por idioma:", "color": "0xff66ffcc",
+                    "type": "list", "default": 0, "enabled": "eq(-2,true)", "visible": True,
                     "lvalues": get_languages(item.from_channel)}
 
     list_controls.append(set_language)
     dict_values['language'] = status_language
-
-    separador = {"id": "label", "label": "         "
-                                         "_________________________________________________________________________________________",
-                 "type": "label", "enabled": True, "visible": True}
-    list_controls.append(separador)
 
 
     # Seccion servidores Preferidos
@@ -573,11 +587,15 @@ def get_languages(channel):
     return list_language
 
 
-def is_active():
+def is_active(channel=None):
     '''
-    Devuelve un booleano q indica si esta activo o no autoplay en el canal desde el que se llama
+    Devuelve un booleano q indica si esta activo o no autoplay en el canal
 
-    :return: True si esta activo autoplay para el canal desde el que se llama, False en caso contrario.
+    :param channel: Opcionalmente el id del canal que queremos consultar.
+        En el caso de no incluirse se consulta el canal desde el que se hizo la llamada.
+    :type channel: str
+    :return: True si esta activo autoplay para el canal, False en caso contrario.
+    :rtype; bool
     '''
     logger.info()
     global autoplay_node
@@ -589,14 +607,14 @@ def is_active():
         # Obtiene el nodo AUTOPLAY desde el json
         autoplay_node = jsontools.get_node_from_data_json('autoplay', 'AUTOPLAY')
 
-        # Obtine el canal desde el q se hace la llamada
-        import inspect
-        module = inspect.getmodule(inspect.currentframe().f_back)
-        canal = module.__name__.split('.')[1]
-        logger.debug(canal)
+        if not channel:
+            # Obtine el canal desde el q se hace la llamada
+            import inspect
+            module = inspect.getmodule(inspect.currentframe().f_back)
+            channel = module.__name__.split('.')[1]
 
         # Obtiene el nodo del canal desde autoplay_node
-        channel_node = autoplay_node.get(canal, {})
+        channel_node = autoplay_node.get(channel, {})
         # Obtiene los ajustes des autoplay para este canal
         settings_node = channel_node.get('settings', {})
 
