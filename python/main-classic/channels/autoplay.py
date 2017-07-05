@@ -607,17 +607,17 @@ def is_active(channel=None):
         # Obtiene el nodo AUTOPLAY desde el json
         autoplay_node = jsontools.get_node_from_data_json('autoplay', 'AUTOPLAY')
 
-        if not channel:
-            # Obtine el canal desde el q se hace la llamada
-            import inspect
-            module = inspect.getmodule(inspect.currentframe().f_back)
-            channel = module.__name__.split('.')[1]
+    if not channel:
+        # Obtine el canal desde el q se hace la llamada
+        import inspect
+        module = inspect.getmodule(inspect.currentframe().f_back)
+        channel = module.__name__.split('.')[1]
 
-        # Obtiene el nodo del canal desde autoplay_node
-        channel_node = autoplay_node.get(channel, {})
-        # Obtiene los ajustes des autoplay para este canal
-        settings_node = channel_node.get('settings', {})
+    # Obtiene el nodo del canal desde autoplay_node
+    channel_node = autoplay_node.get(channel, {})
+    # Obtiene los ajustes des autoplay para este canal
+    settings_node = channel_node.get('settings', {})
 
-        return settings_node.get('active', False)
+    return settings_node.get('active', False)
 
 
